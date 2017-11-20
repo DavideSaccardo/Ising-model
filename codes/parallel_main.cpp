@@ -62,7 +62,7 @@ int main(int argc, char* argv[])
         }
 
         //function to write results to file,we start to take data from cycles>5e4 to be in the steady state, hence we have to normalize with (numberOfMCcycles-5e4)*NProcessors
-        if( RankProcess==0) writeResultstofile(numberOfSpins,(numberOfMCcycles-5e4)*NProcesses,Temperature, total_expectation_values);
+        if( RankProcess==0) writeResultstofile(numberOfSpins,(numberOfMCcycles-cutoff)*NProcesses,Temperature, total_expectation_values);
 
         delete[] local_expectation_values;
         delete[] total_expectation_values;
