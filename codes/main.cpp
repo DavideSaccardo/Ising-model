@@ -17,20 +17,20 @@ inline int PeriodicBoundary(int i, int N, int add){
 }
 
 //Declaration of functions
-void MCcomputation(long int, int, double, double*, int );
+void MCcomputation(long int, int, double, double*, int ,int);
 void initializeLattice(int, double**, double &, double &, int);
 void writeResultstofile(int, long int, double, double* );
 
 int main(int argc, char* argv[])
 {
     //Declaration of Variable
-    double initialTemp=2.4; //temperature at which we start our calculations
-    double finalTemp=2.5; //temperature at which we end our calculations
+    double initialTemp=1.0; //temperature at which we start our calculations
+    double finalTemp=1.1; //temperature at which we end our calculations
     int numberOfSpins=20; // number of spin of the lattice considered, the dimension is thus L=numberOfSpinsXnumberOfSpins
     double stepTemp=0.005; //step of temperatures
     long int numberOfMCcycles=1e6; //number of total Monte Carlo cycles used
     int flag=1; //if flag=1 we start with a random initial configuration of spins in the lattice, if flag=0 we start with all the spins up
-
+    int cutoff=5e4; // a cutoff to start to compute the expectation value after the steady state
     //open ouput file
     string fileout = "output.txt";
     ofile.open(fileout);
@@ -44,9 +44,9 @@ auto start = std::chrono::system_clock::now();
         for( int i =0; i < 6; i++) expectation_values[i] = 0;
 
         //function which contains the MC loop and the acceptance rule using Metropolis
-        MCcomputation(numberOfMCcycles, numberOfSpins, Temperature, expectation_values, flag);
+        MCcomputation(numberOfMCcycles, numberOfSpins, Temperature, expectation_values, flag,cutoff);
         //function to write results to file, we start to take data from cycles>5e4 to be in the steady state, hence we have to normalize with numberOfMCcycles-5e4
-        writeResultstofile(numberOfSpins,numberOfMCcycles-5e4,Temperature, expectation_values);
+        writeResultstofile(numberOfSpins,numberOfMCcycles-cutoff,Temperature, expectation_values);
 
         delete[] expectation_values;
     }
@@ -60,7 +60,7 @@ auto start = std::chrono::system_clock::now();
 }
 
 
-void MCcomputation(long int numberOfMCcycles, int numberOfSpins, double Temperature, double* expectation_value, int flag){
+void MCcomputation(long int numberOfMCcycles, int numberOfSpins, double Temperature, double* expectation_value, int flag, int cutoff){
 //This function performs the MC method using as acceptance rule the one provided by Metropolis algo
     //Generation of a random number
     std::random_device rd;
@@ -115,7 +115,7 @@ void MCcomputation(long int numberOfMCcycles, int numberOfSpins, double Temperat
                  }
 
         //if we are in the equilibrium state, which we found to be after 5e4 MC cycles, we update the expectation values
-    if(cycle>5e4){
+    if(cycle>cutoff){
         expectation_value[0]+=energy;
         expectation_value[1]+=energy*energy;
         expectation_value[2]+=magnetic_moment;

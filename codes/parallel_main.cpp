@@ -18,7 +18,7 @@ inline int PeriodicBoundary(int i, int N, int add){
 }
 
 //Declaration of functions
-void MCcomputation(long int, int, double, double*, int, int, int );
+void MCcomputation(long int, int, double, double*, int, int, int,int );
 void initializeLattice(int, double**, double &, double &, int, int);
 void writeResultstofile(int, long int, double, double* );
 
@@ -32,7 +32,7 @@ int main(int argc, char* argv[])
     long int numberOfMCcycles=1e6; //number of total Monte Carlo cycles used
     int flag=1; //if flag=1 we start with a random initial configuration of spins in the lattice, if flag=0 we start with all the spins up
     int NProcesses, RankProcess; //Declaration of variables useful for parallelization
-
+    int cutoff=5e4; // a cutoff to start to compute the expectation value after the steady state
     //  MPI initializations
     MPI_Init (&argc, &argv);
     MPI_Comm_size (MPI_COMM_WORLD, &NProcesses);
@@ -53,7 +53,7 @@ int main(int argc, char* argv[])
         for( int i =0; i < 6; i++) local_expectation_values[i] = 0;
 
         //function which contains the MC loop and the acceptance rule using Metropolis
-        MCcomputation(numberOfMCcycles, numberOfSpins, Temperature, local_expectation_values, RankProcess, NProcesses, flag);
+        MCcomputation(numberOfMCcycles, numberOfSpins, Temperature, local_expectation_values, RankProcess, NProcesses, flag,cutoff);
         double* total_expectation_values=new double[6];
         for( int i =0; i < 6; i++){
             total_expectation_values[i] = 0;
@@ -80,7 +80,7 @@ int main(int argc, char* argv[])
 }
 
 
-void MCcomputation(long int numberOfMCcycles, int numberOfSpins, double Temperature, double* local_expectation_value, int RankProcess, int NProcesses, int flag){
+void MCcomputation(long int numberOfMCcycles, int numberOfSpins, double Temperature, double* local_expectation_value, int RankProcess, int NProcesses, int flag, int cutoff){
 //This function performs the MC method using as acceptance rule the one provided by Metropolis algo
     //Generation of a random number
     std::random_device rd;
@@ -135,7 +135,7 @@ void MCcomputation(long int numberOfMCcycles, int numberOfSpins, double Temperat
         }
 
         //if we are in the equilibrium state, which we found to be after 5e4 MC cycles, we update the expectation values
-        if(cycle>5e4){
+        if(cycle>cutoff){
             local_expectation_value[0]+=energy;
             local_expectation_value[1]+=energy*energy;
             local_expectation_value[2]+=magnetic_moment;

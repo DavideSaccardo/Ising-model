@@ -11,6 +11,7 @@ In these folders it can be found the codes to study the Ising model for a lattic
 		-numberOfSpins: number of spin of the lattice considered, the dimension is thus L=numberOfSpinsXnumberOfSpins;
 		-numberOfMCcycles: number of Monte Carlo cycles;
 		-flag: if flag=1 the function initializeLattice will fill the lattice with random spins, if flag=0 it'll fill the lattice 			with all the spins up;
+		-cutoff: define a cutoff to start to compute the expectation value after some MC cycles, you can choose it to start the 			computation after you have reached the steady state (5e4 for me).
 		To compile: c++ -o run.x main.cpp.
 	* parallel_main.cpp: it's the code to study the Ising model with parallelization. It's structured in the same way as the code 			before, the only difference is that you can run it with how many processor you want. Hence, the parameters to declare at the beginning are the same as main.cpp.
 
@@ -18,4 +19,3 @@ In these folders it can be found the codes to study the Ising model for a lattic
 
 		To compile: /usr/lib64/openmpi/bin/mpic++ -std=c++11 -o3 parallel_main.cpp -o prova
 		To run: /usr/lib64/openmpi/bin/mpirun -np 8 prova
-Note: the codes are set to have a cutoff at 5e4 MC cycles, which means that we consider only steady states and it normalizes the thermodynamical quantities according to it.
