@@ -52,11 +52,13 @@ int main(int argc, char* argv[])
         double* local_expectation_values=new double[6];
         for( int i =0; i < 6; i++) local_expectation_values[i] = 0;
 
+        //function which contains the MC loop and the acceptance rule using Metropolis
         MCcomputation(numberOfMCcycles, numberOfSpins, Temperature, local_expectation_values, RankProcess, NProcesses, flag);
         double* total_expectation_values=new double[6];
         for( int i =0; i < 6; i++){
             total_expectation_values[i] = 0;
             MPI_Reduce(&local_expectation_values[i], &total_expectation_values[i], 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+            //function to collect the data from each processor
         }
 
         //function to write results to file,we start to take data from cycles>5e4 to be in the steady state, hence we have to normalize with (numberOfMCcycles-5e4)*NProcessors
@@ -79,7 +81,7 @@ int main(int argc, char* argv[])
 
 
 void MCcomputation(long int numberOfMCcycles, int numberOfSpins, double Temperature, double* local_expectation_value, int RankProcess, int NProcesses, int flag){
-
+//This function performs the MC method using as acceptance rule the one provided by Metropolis algo
     //Generation of a random number
     std::random_device rd;
     std::mt19937_64 gen(rd()+RankProcess);

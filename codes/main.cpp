@@ -43,6 +43,7 @@ auto start = std::chrono::system_clock::now();
         double* expectation_values=new double[6];
         for( int i =0; i < 6; i++) expectation_values[i] = 0;
 
+        //function which contains the MC loop and the acceptance rule using Metropolis
         MCcomputation(numberOfMCcycles, numberOfSpins, Temperature, expectation_values, flag);
         //function to write results to file, we start to take data from cycles>5e4 to be in the steady state, hence we have to normalize with numberOfMCcycles-5e4
         writeResultstofile(numberOfSpins,numberOfMCcycles-5e4,Temperature, expectation_values);
@@ -60,7 +61,7 @@ auto start = std::chrono::system_clock::now();
 
 
 void MCcomputation(long int numberOfMCcycles, int numberOfSpins, double Temperature, double* expectation_value, int flag){
-
+//This function performs the MC method using as acceptance rule the one provided by Metropolis algo
     //Generation of a random number
     std::random_device rd;
     std::mt19937_64 gen(rd());
