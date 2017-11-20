@@ -1,8 +1,8 @@
 # Project4_ISING
 
 In these folders it can be found the codes to study the Ising model for a lattice of dimension numberOfSpinsXnumberOfSpins. In particular:
--Example_data: it contains file txt as example of possibles outcomes: in fact these are the data used to create the images shown int he report. For example output100_1e6_005_final_15 		contains the mean energy, mean absolute magnetization, susceptibility, susceptibility computed with |M|, specific heat for L=100X100, MC=1e6, stepTemp=0.005, T\in[2.1,2.5]. 			I could have included other data, but they were too heavy for github.
--Matlab: it contains the script used to plot the images found in the paper and all the scripts to import data;
+-Example_data: it contains file txt as example of possibles outcomes: in fact these are the data used to create the images shown in the report. For example output100_1e6_005_final_15 contains the mean energy, mean absolute magnetization, susceptibility, susceptibility computed with |M|, specific heat for L=100X100, MC=1e6, stepTemp=0.005, T\in[2.1,2.5]. 			I could have included other data, but they were too heavy for github.
+-Matlab: it contains the script (script.m) used to plot the images found in the paper and all the scripts to import data (all the other files .m); 
 -Codes: it contains:
 	* main.cpp: it's the code to study the Ising model without parallelization. At the beginning you have to decide:
 		-initialTemp: initial temperature at which start the calculations;
